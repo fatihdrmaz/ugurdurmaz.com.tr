@@ -35,12 +35,12 @@ export const socials = [
 export const contact = {
   addressLines: ['Merkez Mh. Halitpaşa Cd.', 'No: 27/A Gaziosmanpaşa', 'İstanbul - Türkiye'],
   mapsQuery: 'Merkez Mh. Halitpaşa Cd. No: 27/A Gaziosmanpaşa İstanbul',
-  tel: '+90 (554) 879 11 55',
-  telHref: 'tel:+905548791155',
-  gsm: '+90 (554) 879 11 55',
-  gsmHref: 'tel:+905548791155',
-  whatsappHref: 'https://wa.me/905548791155',
-  email: 'ugur@ctcstudio.com.tr',
+  tel: '+90 (552) 523 43 17',
+  telHref: 'tel:+905525234317',
+  gsm: '+90 (552) 523 43 17',
+  gsmHref: 'tel:+905525234317',
+  whatsappHref: 'https://wa.me/905525234317',
+  email: 'ugurdurmaz@gmail.com',
 };
 
 export type Category = 'Doğa' | 'Şehir' | 'İnsan';
@@ -107,19 +107,11 @@ export const accounts = [
   {
     holder: 'Uğur Durmaz',
     banks: [
-      { bank: 'Enpara', ibans: [{ currency: '₺', label: 'TL', iban: 'TR35 0011 1000 0000 0083 7002 08' }] },
-      {
-        bank: 'ING Bank',
-        ibans: [
-          { currency: '₺', label: 'TL', iban: 'TR38 0009 9009 6989 0300 1000 01' },
-          { currency: '€', label: 'EUR', iban: 'TR33 0009 9009 6989 0300 2000 01' },
-          { currency: '$', label: 'USD', iban: 'TR06 0009 9009 6989 0300 2000 02' },
-        ],
-      },
+      { bank: 'Enpara', ibans: [{ currency: '₺', label: 'TL', iban: 'TR78 0015 7000 0000 0083 7002 08' }] },
     ],
   },
   {
     holder: 'CTC Bilişim ve Görsel Tasarım Tic. Ltd. Şti.',
-    banks: [{ bank: 'Yapı Kredi', ibans: [{ currency: '₺', label: 'TL', iban: 'TR33 0006 7010 0000 0057 2293 10' }] }],
+    banks: [{ bank: 'Enpara', ibans: [{ currency: '₺', label: 'TL', iban: 'TR46 0015 7000 0000 0107 4256 26' }] }],
   },
 ];

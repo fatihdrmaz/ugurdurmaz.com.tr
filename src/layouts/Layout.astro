@@ -341,8 +341,9 @@ const canonical = new URL(path, Astro.site);
       display: flex;
     }
 
-    .menu-toggle {
-      display: none;
+    .menu-toggle,
+    .mobile-menu {
+      display: none !important;
     }
   }
 
@@ -357,11 +358,19 @@ const canonical = new URL(path, Astro.site);
     background: var(--bg);
     overflow-y: auto;
     opacity: 0;
-    transition: opacity 250ms var(--ease-out);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 250ms var(--ease-out), visibility 250ms var(--ease-out);
+  }
+
+  .mobile-menu[hidden] {
+    display: none !important;
   }
 
   .mobile-menu.is-open {
     opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
   }
 
   .mobile-menu ol {

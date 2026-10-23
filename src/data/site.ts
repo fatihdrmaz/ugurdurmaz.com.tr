@@ -29,7 +29,7 @@ export const socials = [
   { href: 'https://www.instagram.com/ugurdrmz/', label: '@ugurdrmz', icon: 'instagram' },
   { href: 'https://www.facebook.com/ugurdurmaz75', label: 'Facebook', icon: 'facebook' },
   { href: 'https://twitter.com/ugur_drmz', label: 'Twitter', icon: 'twitter' },
-  { href: 'https://www.linkedin.com/in/ugur-durmaz-75508a69/', label: 'LinkedIn', icon: 'linkedin' },
+  { href: 'https://www.linkedin.com/in/ugur-durmaz-94aa111a4/', label: 'LinkedIn', icon: 'linkedin' },
 ] as const;
 
 export const contact = {

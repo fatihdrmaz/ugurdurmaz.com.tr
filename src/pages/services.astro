@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { services, photos } from '../data/site';
+
+const steps = [
+  { title: 'Tanışma', text: 'İhtiyacınızı, hedef kitlenizi ve bütçenizi birlikte netleştiriyoruz.' },
+  { title: 'Tasarım', text: 'Fikirleri taslaklara dönüştürüp geri bildirimlerinizle şekillendiriyoruz.' },
+  { title: 'Uygulama', text: 'Onaylanan tasarımı baskı, web veya sahada hayata geçiriyoruz.' },
+  { title: 'Destek', text: 'Teslimattan sonra da güncelleme ve teknik destekle yanınızdayız.' },
+];
+const banner = photos.find((p) => p.title === 'Yelken')!;
+---
+
+<Layout title="Hizmetler" description="Logo ve kurumsal kimlik, fotoğrafçılık, web tasarım, reklam ve tabela, baskı ve bilişim hizmetleri.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Neler yapıyoruz</p>
+      <h1 class="h-display">Hizmetler</h1>
+      <p class="lead">Reklam ve bilgisayar hizmetlerini tek çatı altında birleştiren CTC Bilişim ve Görsel Tasarım ile markanız için uçtan uca çözümler.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ol class="service-list">
+        {
+          services.map((s, i) => (
+            <li class="reveal" style={`--delay:${(i % 2) * 60}ms`}>
+              <span class="idx">{String(i + 1).padStart(2, '0')}</span>
+              <span class="ico"><Icon name={s.icon} size={26} /></span>
+              <div>
+                <h2>{s.title}</h2>
+                <p>{s.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="banner">
+    <Image src={banner.src} alt={banner.alt} widths={[768, 1280, 1920]} sizes="100vw" format="webp" quality={72} />
+    <div class="banner-content container">
+      <p class="eyebrow">Fotoğraf çekimi mi lazım?</p>
+      <h2 class="h-section">Anı yakalayalım.</h2>
+      <a href="/iletisim/" class="btn btn-primary">İletişime geçin <Icon name="arrow-right" size={18} /></a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Süreç</p>
+          <h2 class="h-section reveal">Nasıl çalışıyoruz?</h2>
+        </div>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li class="reveal" style={`--delay:${i * 60}ms`}>
+              <span class="step-num">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .service-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 900px) {
+    .service-list {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 48px;
+    }
+  }
+
+  .service-list li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 20px;
+    align-items: start;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .idx {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--muted);
+    padding-top: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ico {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgb(233 162 59 / 0.12);
+    color: var(--accent);
+  }
+
+  .service-list h2 {
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    margin-bottom: 8px;
+  }
+
+  .service-list p {
+    color: var(--muted);
+  }
+
+  .banner {
+    position: relative;
+    min-height: clamp(380px, 55vw, 600px);
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .banner > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgb(12 12 14 / 0.9), rgb(12 12 14 / 0.1) 70%);
+  }
+
+  .banner-content {
+    display: grid;
+    justify-items: start;
+    gap: 18px;
+    padding-block: clamp(40px, 6vw, 72px);
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .steps li {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .step-num {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .steps h3 {
+    font-size: 1.375rem;
+  }
+
+  .steps p {
+    color: var(--muted);
+  }
+</style>

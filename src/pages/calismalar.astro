@@ -1,0 +1,98 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { works } from '../data/site';
+
+const items = await Promise.all(
+  works.map(async (w) => ({ ...w, full: await getImage({ src: w.src, format: 'webp', quality: 90 }) })),
+);
+---
+
+<Layout title="Çalışmalar" description="Uğur Durmaz logo ve kurumsal kimlik tasarımı çalışmaları.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Portfolyo</p>
+      <h1 class="h-display">Çalışmalar</h1>
+      <p class="lead">Farklı sektörlerden markalar için tasarlanan logo ve kurumsal kimlik çalışmalarından bir seçki.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ul class="works-grid">
+        {
+          items.map((w, i) => (
+            <li class="reveal" style={`--delay:${(i % 3) * 60}ms`}>
+              <a href={w.full.src} class="work-card" data-lb-item data-title={w.title} data-alt={w.alt}>
+                <span class="work-img">
+                  <Image src={w.src} alt={w.alt} widths={[400, 600]} sizes="(min-width: 1100px) 380px, (min-width: 640px) 50vw, 100vw" format="webp" quality={85} />
+                </span>
+                <span class="work-meta">
+                  <span>{w.title}</span>
+                  <span class="work-num">{String(i + 1).padStart(2, '0')}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+  <Lightbox />
+</Layout>
+
+<style>
+  .works-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+
+  .work-card {
+    display: grid;
+    gap: 14px;
+    cursor: zoom-in;
+  }
+
+  .work-img {
+    display: block;
+    aspect-ratio: 600 / 319;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--paper);
+    outline: 1px solid var(--line);
+  }
+
+  .work-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 600ms var(--ease-out);
+  }
+
+  .work-card:hover .work-img img,
+  .work-card:focus-visible .work-img img {
+    transform: scale(1.05);
+  }
+
+  .work-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    color: var(--muted);
+    transition: color var(--dur) var(--ease-out);
+  }
+
+  .work-card:hover .work-meta {
+    color: var(--text);
+  }
+
+  .work-num {
+    font-variant-numeric: tabular-nums;
+  }
+</style>

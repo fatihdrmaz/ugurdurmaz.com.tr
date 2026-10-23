@@ -1,0 +1,235 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { accounts } from '../data/site';
+---
+
+<Layout title="Hesap Numaraları" description="Uğur Durmaz ve CTC Bilişim ve Görsel Tasarım banka hesap (IBAN) bilgileri.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Ödeme bilgileri</p>
+      <h1 class="h-display">Hesap Numaraları</h1>
+      <p class="lead">IBAN'ı kopyalamak için yanındaki düğmeye dokunun.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container accounts">
+      {
+        accounts.map((a) => (
+          <article class="holder reveal">
+            <header>
+              <span class="holder-label">Hesap adı</span>
+              <h2>{a.holder}</h2>
+            </header>
+            <div class="banks">
+              {a.banks.map((b) => (
+                <div class="bank">
+                  <h3>
+                    <Icon name="landmark" size={18} /> {b.bank}
+                  </h3>
+                  <ul>
+                    {b.ibans.map((x) => (
+                      <li>
+                        <span class="cur" title={x.label}>
+                          {x.currency}
+                          <span class="sr-only"> {x.label}</span>
+                        </span>
+                        <code class="iban">{x.iban}</code>
+                        <button type="button" class="copy" data-copy={x.iban.replace(/\s/g, '')} aria-label={`${b.bank} ${x.label} IBAN kopyala`}>
+                          <Icon name="copy" size={18} class="i-copy" />
+                          <Icon name="check" size={18} class="i-check" />
+                          <span class="copy-text">Kopyala</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <p class="toast" role="status" aria-live="polite" data-toast></p>
+  </section>
+</Layout>
+
+<script>
+  const toast = document.querySelector<HTMLElement>('[data-toast]')!;
+  let t: number | undefined;
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) =>
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        btn.classList.add('is-copied');
+        btn.querySelector('.copy-text')!.textContent = 'Kopyalandı';
+        toast.textContent = 'IBAN panoya kopyalandı';
+        toast.classList.add('is-shown');
+        clearTimeout(t);
+        t = window.setTimeout(() => {
+          toast.classList.remove('is-shown');
+          btn.classList.remove('is-copied');
+          btn.querySelector('.copy-text')!.textContent = 'Kopyala';
+        }, 2500);
+      } catch {
+        toast.textContent = 'Kopyalanamadı, lütfen IBAN\'ı elle seçin';
+        toast.classList.add('is-shown');
+      }
+    }),
+  );
+</script>
+
+<style>
+  .accounts {
+    display: grid;
+    gap: 24px;
+  }
+
+  .holder {
+    display: grid;
+    gap: 28px;
+    padding: clamp(24px, 4vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(160deg, var(--surface-2), var(--surface) 60%);
+  }
+
+  .holder-label {
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .holder h2 {
+    margin-top: 6px;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .banks {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  }
+
+  .bank {
+    padding: 22px;
+    border-radius: var(--radius-sm);
+    background: rgb(0 0 0 / 0.25);
+    border: 1px solid var(--line);
+  }
+
+  .bank h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  .bank ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .bank li {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .bank li:first-child {
+    border-top: 0;
+  }
+
+  .cur {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .iban {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: clamp(0.8125rem, 1.6vw, 0.975rem);
+    letter-spacing: 0.02em;
+    word-break: break-word;
+    user-select: all;
+  }
+
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    font-size: 0.875rem;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+
+  .copy:hover {
+    border-color: var(--text);
+  }
+
+  .copy :global(.i-check),
+  .copy.is-copied :global(.i-copy) {
+    display: none;
+  }
+
+  .copy.is-copied :global(.i-check) {
+    display: block;
+  }
+
+  .copy.is-copied {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 520px) {
+    .copy-text {
+      display: none;
+    }
+
+    .copy {
+      width: 44px;
+      padding: 0;
+      justify-content: center;
+    }
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    z-index: 60;
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 500;
+    translate: -50% 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      translate var(--dur) var(--ease-out);
+  }
+
+  .toast.is-shown {
+    opacity: 1;
+    translate: -50% 0;
+  }
+</style>

@@ -1,0 +1,711 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { photos, works, services, clients } from '../data/site';
+import portrait from '../assets/dur.png';
+
+const heroTitles = ['Sultanahmet', 'Yelken', 'Cezalı Kuşlar', 'Sessiz Göl'];
+const heroPhotos = heroTitles.map((t) => photos.find((p) => p.title === t)!);
+const heroImages = await Promise.all(
+  heroPhotos.map((p) => getImage({ src: p.src, width: 1920, format: 'webp', quality: 75 })),
+);
+const heroSrcsets = await Promise.all(
+  heroPhotos.map((p) => getImage({ src: p.src, widths: [768, 1280, 1920], format: 'webp', quality: 72 })),
+);
+
+const featured = ['Galata', 'Kalp', 'Plovdiv', 'Puf', 'Mor', 'Martı'].map((t) => photos.find((p) => p.title === t)!);
+const startYear = 1993;
+const years = new Date().getFullYear() - startYear;
+---
+
+<Layout transparentHeader>
+  <!-- Hero -->
+  <section class="hero" aria-label="Öne çıkan fotoğraflar" data-hero>
+    <div class="hero-slides">
+      {
+        heroPhotos.map((p, i) => (
+          <img
+            class:list={['hero-slide', { 'is-active': i === 0 }]}
+            src={heroImages[i].src}
+            srcset={heroSrcsets[i].srcSet.attribute}
+            sizes="100vw"
+            alt={p.alt}
+            width={heroImages[i].attributes.width}
+            height={heroImages[i].attributes.height}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : undefined}
+            decoding="async"
+            data-title={p.title}
+          />
+        ))
+      }
+    </div>
+    <div class="hero-scrim"></div>
+
+    <div class="container hero-content">
+      <p class="eyebrow hero-anim" style="--d:0ms">Fotoğraf · Grafik Tasarım · Bilişim</p>
+      <h1 class="h-display hero-anim" style="--d:80ms">Uğur<br />Durmaz</h1>
+      <p class="hero-lead hero-anim" style="--d:160ms">
+        {years} yılı aşkın deneyimle markalar için görsel kimlik, reklam ve teknoloji çözümleri üretiyor; objektifini
+        İstanbul'un ışığına ve doğanın sessiz anlarına çeviriyor.
+      </p>
+      <div class="hero-actions hero-anim" style="--d:240ms">
+        <a href="/fotograflar/" class="btn btn-primary">Fotoğrafları Keşfet <Icon name="arrow-right" size={18} /></a>
+        <a href="/calismalar/" class="btn btn-ghost">Çalışmalar</a>
+      </div>
+    </div>
+
+    <div class="container hero-controls">
+      <p class="hero-current" aria-live="polite"><span data-hero-title>{heroPhotos[0].title}</span></p>
+      <div class="hero-dots" role="group" aria-label="Slayt seçimi">
+        {
+          heroPhotos.map((p, i) => (
+            <button
+              type="button"
+              class:list={['hero-dot', { 'is-active': i === 0 }]}
+              aria-label={`${i + 1}. slayt: ${p.title}`}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              data-hero-dot={i}
+            >
+              <span />
+            </button>
+          ))
+        }
+        <button type="button" class="hero-pause" aria-label="Slayt gösterisini durdur" data-hero-pause>
+          <Icon name="pause" size={16} class="i-pause" />
+          <Icon name="play" size={16} class="i-play" />
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section about">
+    <div class="container about-grid">
+      <div class="about-portrait reveal">
+        <Image src={portrait} alt="Uğur Durmaz portresi" width={550} format="webp" quality={80} />
+      </div>
+      <div class="about-text">
+        <p class="eyebrow reveal">Biyografi</p>
+        <h2 class="h-section reveal" style="--delay:60ms">1993'ten bu yana teknoloji ve tasarımın kesişiminde.</h2>
+        <p class="lead reveal" style="--delay:120ms">
+          İstanbul Gaziosmanpaşa'da kurduğu CTC Bilgisayar ile başlayan yolculuk; Bulgaristan'da CTC Studio ve
+          Sign Graphic Bulgaria dergisiyle reklam sektörüne, 2015'te ise CTC Bilişim ve Görsel Tasarım çatısına uzandı.
+        </p>
+        <dl class="stats reveal" style="--delay:180ms">
+          <div><dt>Yıllık deneyim</dt><dd>{years}+</dd></div>
+          <div><dt>Ülke</dt><dd>2</dd></div>
+          <div><dt>Kurumsal müşteri</dt><dd>20+</dd></div>
+        </dl>
+        <a href="/hakkimda/" class="link-arrow reveal" style="--delay:240ms">Biyografinin tamamı <Icon name="arrow-right" size={18} /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured photos -->
+  <section class="section featured">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Fotoğraflar</p>
+          <h2 class="h-section reveal" style="--delay:60ms">Seçilmiş kareler</h2>
+        </div>
+        <a href="/fotograflar/" class="link-arrow reveal">Tüm fotoğraflar <Icon name="arrow-right" size={18} /></a>
+      </div>
+      <ul class="bento">
+        {
+          featured.map((p, i) => (
+            <li class="reveal" style={`--delay:${i * 50}ms`}>
+              <a href="/fotograflar/" class="bento-card" aria-label={`${p.title} — tüm fotoğraflara git`}>
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  widths={[480, 800, 1200]}
+                  sizes="(min-width: 900px) 50vw, 100vw"
+                  format="webp"
+                  quality={75}
+                />
+                <span class="bento-label">{p.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Works -->
+  <section class="section works">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Çalışmalar</p>
+          <h2 class="h-section reveal" style="--delay:60ms">Logo & kurumsal kimlik</h2>
+        </div>
+        <a href="/calismalar/" class="link-arrow reveal">Tüm çalışmalar <Icon name="arrow-right" size={18} /></a>
+      </div>
+    </div>
+    <div class="marquee" aria-label="Logo çalışmalarından örnekler">
+      <ul class="marquee-track">
+        {
+          [...works, ...works].map((w, i) => (
+            <li aria-hidden={i >= works.length ? 'true' : undefined}>
+              <Image src={w.src} alt={i >= works.length ? '' : w.alt} width={360} format="webp" quality={80} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section services">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Hizmetler</p>
+          <h2 class="h-section reveal" style="--delay:60ms">Fikirden uygulamaya,<br />tek çatı altında.</h2>
+        </div>
+        <a href="/services/" class="link-arrow reveal">Tüm hizmetler <Icon name="arrow-right" size={18} /></a>
+      </div>
+      <ul class="service-grid">
+        {
+          services.map((s, i) => (
+            <li class="service-card reveal" style={`--delay:${i * 50}ms`}>
+              <span class="service-icon"><Icon name={s.icon} size={24} /></span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Clients -->
+  <section class="clients" aria-label="Müşteriler">
+    <div class="container">
+      <p class="eyebrow">Birlikte çalıştığı markalar</p>
+    </div>
+    <div class="ticker">
+      <ul class="ticker-track">
+        {[...clients, ...clients].map((c, i) => <li aria-hidden={i >= clients.length ? 'true' : undefined}>{c}</li>)}
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    const slides = Array.from(hero.querySelectorAll<HTMLImageElement>('.hero-slide'));
+    const dots = Array.from(hero.querySelectorAll<HTMLButtonElement>('[data-hero-dot]'));
+    const title = hero.querySelector<HTMLElement>('[data-hero-title]')!;
+    const pauseBtn = hero.querySelector<HTMLButtonElement>('[data-hero-pause]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0;
+    let timer: number | undefined;
+    let paused = reduce;
+
+    const go = (i: number) => {
+      slides[current].classList.remove('is-active');
+      dots[current].classList.remove('is-active');
+      dots[current].setAttribute('aria-pressed', 'false');
+      current = (i + slides.length) % slides.length;
+      slides[current].classList.add('is-active');
+      dots[current].classList.add('is-active');
+      dots[current].setAttribute('aria-pressed', 'true');
+      title.textContent = slides[current].dataset.title ?? '';
+      restart();
+    };
+
+    const restart = () => {
+      clearInterval(timer);
+      hero.classList.toggle('is-paused', paused);
+      if (!paused) timer = window.setInterval(() => go(current + 1), 6000);
+    };
+
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    pauseBtn.addEventListener('click', () => {
+      paused = !paused;
+      pauseBtn.setAttribute('aria-label', paused ? 'Slayt gösterisini başlat' : 'Slayt gösterisini durdur');
+      restart();
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? clearInterval(timer) : restart()));
+    restart();
+  }
+</script>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero-slides,
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.08);
+    transition:
+      opacity 1400ms ease,
+      transform 7000ms linear;
+  }
+
+  .hero-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hero-scrim {
+    background:
+      linear-gradient(to top, rgb(12 12 14 / 1) 0%, rgb(12 12 14 / 0.55) 35%, rgb(12 12 14 / 0.15) 65%, rgb(12 12 14 / 0.45) 100%),
+      linear-gradient(to right, rgb(12 12 14 / 0.6), transparent 60%);
+  }
+
+  .hero-content {
+    align-self: end;
+    display: grid;
+    gap: 24px;
+    padding-top: calc(var(--header-h) + 48px);
+    padding-bottom: 40px;
+  }
+
+  .hero-lead {
+    max-width: 52ch;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    color: rgb(242 239 233 / 0.85);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero-anim {
+    animation: rise 900ms var(--ease-out) both;
+    animation-delay: calc(var(--d) + 150ms);
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+  }
+
+  .hero-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+
+  .hero-current {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .hero-current::before {
+    content: 'Kare — ';
+  }
+
+  .hero-dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hero-dot {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    padding: 0;
+  }
+
+  .hero-dot span {
+    position: relative;
+    width: 32px;
+    height: 2px;
+    background: rgb(255 255 255 / 0.3);
+    overflow: hidden;
+  }
+
+  .hero-dot span::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .hero-dot.is-active span::after {
+    animation: progress 6000ms linear forwards;
+  }
+
+  .hero.is-paused .hero-dot.is-active span::after {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  @keyframes progress {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .hero-pause {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-left: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgb(0 0 0 / 0.25);
+  }
+
+  .hero-pause :global(.i-play),
+  .hero.is-paused .hero-pause :global(.i-pause) {
+    display: none;
+  }
+
+  .hero.is-paused .hero-pause :global(.i-play) {
+    display: block;
+  }
+
+  @media (max-width: 560px) {
+    .hero-current {
+      display: none;
+    }
+
+    .hero-controls {
+      justify-content: flex-start;
+    }
+  }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    gap: clamp(40px, 6vw, 88px);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 5fr 7fr;
+    }
+  }
+
+  .about-portrait {
+    position: relative;
+    max-width: 460px;
+  }
+
+  .about-portrait::before {
+    content: '';
+    position: absolute;
+    inset: 24px -24px -24px 24px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    opacity: 0.5;
+  }
+
+  .about-portrait img {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius);
+    filter: grayscale(1) contrast(1.05);
+  }
+
+  .about-text {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    margin: 8px 0;
+    border-block: 1px solid var(--line);
+  }
+
+  .stats div {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+  }
+
+  .stats div + div {
+    padding-left: 20px;
+    border-left: 1px solid var(--line);
+  }
+
+  .stats dt {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Bento */
+  .featured {
+    padding-top: 0;
+  }
+
+  .bento {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: clamp(160px, 22vw, 300px);
+  }
+
+  .bento li:nth-child(1) {
+    grid-row: span 2;
+  }
+
+  .bento li:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  @media (min-width: 900px) {
+    .bento {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .bento li:nth-child(1) {
+      grid-row: span 2;
+    }
+
+    .bento li:nth-child(2) {
+      grid-column: span 2;
+    }
+
+    .bento li:nth-child(4) {
+      grid-column: auto;
+    }
+
+    .bento li:nth-child(5) {
+      grid-column: span 2;
+    }
+  }
+
+  .bento-card {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+  }
+
+  .bento-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 800ms var(--ease-out);
+  }
+
+  .bento-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .bento-label {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    background: rgb(12 12 14 / 0.6);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Works marquee */
+  .works {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee-track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    animation: scroll 70s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-track li {
+    flex: none;
+    width: clamp(220px, 26vw, 340px);
+    aspect-ratio: 600 / 319;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .marquee-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(calc(-50% - 10px));
+    }
+  }
+
+  /* Services */
+  .service-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .service-card {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--bg);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .service-card:hover {
+    background: var(--surface);
+  }
+
+  .service-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgb(233 162 59 / 0.12);
+    color: var(--accent);
+  }
+
+  .service-card h3 {
+    font-size: 1.375rem;
+  }
+
+  .service-card p {
+    color: var(--muted);
+  }
+
+  /* Clients ticker */
+  .clients {
+    display: grid;
+    gap: 28px;
+    padding-bottom: clamp(72px, 10vw, 140px);
+  }
+
+  .ticker {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .ticker-track {
+    list-style: none;
+    margin: 0;
+    padding: 28px 0;
+    display: flex;
+    width: max-content;
+    animation: scroll 60s linear infinite;
+  }
+
+  .ticker-track li {
+    flex: none;
+    padding-inline: 28px;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgb(242 239 233 / 0.55);
+    white-space: nowrap;
+  }
+
+  .ticker-track li::after {
+    content: '✦';
+    margin-left: 56px;
+    font-size: 0.5em;
+    vertical-align: middle;
+    color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track,
+    .ticker-track {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+    }
+
+    .hero-slide {
+      transform: none;
+    }
+
+    .marquee-track li[aria-hidden],
+    .ticker-track li[aria-hidden] {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,198 @@
+---
+import Icon from './Icon.astro';
+---
+
+<dialog class="lightbox" data-lightbox aria-label="Görsel görüntüleyici">
+  <div class="lb-top">
+    <p class="lb-caption" data-lb-caption aria-live="polite"></p>
+    <button type="button" class="lb-btn" data-lb-close aria-label="Kapat"><Icon name="x" size={22} /></button>
+  </div>
+  <div class="lb-stage" data-lb-stage>
+    <img data-lb-img alt="" />
+  </div>
+  <button type="button" class="lb-btn lb-nav lb-prev" data-lb-prev aria-label="Önceki görsel">
+    <Icon name="chevron-left" size={24} />
+  </button>
+  <button type="button" class="lb-btn lb-nav lb-next" data-lb-next aria-label="Sonraki görsel">
+    <Icon name="chevron-right" size={24} />
+  </button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  if (dialog) {
+    const img = dialog.querySelector<HTMLImageElement>('[data-lb-img]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lb-caption]')!;
+    const stage = dialog.querySelector<HTMLElement>('[data-lb-stage]')!;
+    let items: HTMLAnchorElement[] = [];
+    let index = 0;
+
+    const visibleItems = () =>
+      Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-lb-item]')).filter(
+        (a) => a.offsetParent !== null,
+      );
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const a = items[index];
+      img.classList.remove('is-loaded');
+      img.onload = () => img.classList.add('is-loaded');
+      img.src = a.href;
+      img.alt = a.dataset.alt ?? '';
+      caption.textContent = `${a.dataset.title ?? ''}  ·  ${index + 1} / ${items.length}`;
+      const next = items[(index + 1) % items.length];
+      if (next) new Image().src = next.href;
+    };
+
+    document.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('[data-lb-item]');
+      if (!a || e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      items = visibleItems();
+      show(items.indexOf(a));
+      dialog.showModal();
+      document.body.style.overflow = 'hidden';
+    });
+
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+      items[index]?.focus();
+    });
+    dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-lb-prev]')!.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-lb-next]')!.addEventListener('click', () => show(index + 1));
+    stage.addEventListener('click', (e) => e.target === stage && dialog.close());
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(index - 1);
+      if (e.key === 'ArrowRight') show(index + 1);
+    });
+
+    let startX = 0;
+    stage.addEventListener('touchstart', (e) => (startX = e.touches[0].clientX), { passive: true });
+    stage.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+    });
+  }
+</script>
+
+<style>
+  .lightbox {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(6 6 8 / 0.96);
+    color: var(--text);
+  }
+
+  .lightbox::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    animation: lb-in 260ms var(--ease-out);
+  }
+
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .lb-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px var(--gutter);
+  }
+
+  .lb-caption {
+    font-family: var(--font-display);
+    color: var(--muted);
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lb-stage {
+    display: grid;
+    place-items: center;
+    padding: 0 var(--gutter) 24px;
+    min-height: 0;
+  }
+
+  .lb-stage img {
+    max-width: 100%;
+    max-height: calc(100dvh - 110px);
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    opacity: 0;
+    transform: scale(0.98);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 300ms var(--ease-out);
+  }
+
+  .lb-stage img.is-loaded {
+    opacity: 1;
+    transform: none;
+  }
+
+  .lb-btn {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgb(20 20 24 / 0.7);
+    backdrop-filter: blur(8px);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .lb-btn:hover {
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .lb-nav {
+    position: fixed;
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .lb-prev {
+    left: 12px;
+  }
+
+  .lb-next {
+    right: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .lb-nav {
+      top: auto;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      translate: none;
+    }
+
+    .lb-prev {
+      left: calc(50% - 60px);
+    }
+
+    .lb-next {
+      right: calc(50% - 60px);
+    }
+
+    .lb-stage img {
+      max-height: calc(100dvh - 180px);
+    }
+  }
+</style>

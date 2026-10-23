@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { photos } from '../data/site';
+
+const categories = ['Tümü', ...new Set(photos.map((p) => p.category))];
+---
+
+<Layout title="Fotoğraflar" description="Uğur Durmaz fotoğraf seçkisi: İstanbul, doğa ve insan kareleri.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Galeri</p>
+      <h1 class="h-display">Fotoğraflar</h1>
+      <p class="lead">İstanbul'un ışıkları, doğanın küçük ayrıntıları ve sessiz anlar. Büyük görmek için bir kareye dokunun.</p>
+    </div>
+  </section>
+
+  <section class="section gallery">
+    <div class="container">
+      <div class="filters" role="group" aria-label="Kategoriye göre filtrele">
+        {
+          categories.map((c, i) => (
+            <button type="button" class="chip" aria-pressed={i === 0 ? 'true' : 'false'} data-filter={c}>
+              {c}
+              <span class="chip-count">{c === 'Tümü' ? photos.length : photos.filter((p) => p.category === c).length}</span>
+            </button>
+          ))
+        }
+      </div>
+      <PhotoGrid photos={photos} />
+    </div>
+  </section>
+  <Lightbox />
+</Layout>
+
+<script>
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.masonry-item'));
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const f = chip.dataset.filter;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      items.forEach((it) => {
+        it.hidden = f !== 'Tümü' && it.dataset.category !== f;
+        if (!it.hidden) it.classList.add('is-visible');
+      });
+    }),
+  );
+</script>
+
+<style>
+  .gallery {
+    padding-top: 40px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+
+  .chip:hover {
+    border-color: var(--text);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+  }
+
+  .chip-count {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

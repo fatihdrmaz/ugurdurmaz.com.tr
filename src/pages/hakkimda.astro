@@ -1,0 +1,232 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { timeline, clients } from '../data/site';
+import portrait from '../assets/dur.png';
+---
+
+<Layout title="Biyografi" description="Uğur Durmaz'ın biyografisi: CTC Bilgisayar'dan CTC Bilişim ve Görsel Tasarım'a uzanan yolculuk.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Hakkımda</p>
+      <h1 class="h-display">Biyografi</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container bio-grid">
+      <aside class="bio-aside">
+        <div class="bio-portrait reveal">
+          <Image src={portrait} alt="Uğur Durmaz portresi" width={550} format="webp" quality={82} loading="eager" />
+        </div>
+        <dl class="facts reveal">
+          <div><dt>Doğum</dt><dd>1 Nisan 1975, İstanbul</dd></div>
+          <div><dt>Eğitim</dt><dd>İ.Ü. Turizm ve Otel İşletme</dd></div>
+          <div><dt>Şirket</dt><dd>CTC Bilişim ve Görsel Tasarım</dd></div>
+        </dl>
+      </aside>
+
+      <div class="bio-body">
+        <div class="prose reveal">
+          <p class="first">
+            1 Nisan 1975 tarihinde İstanbul'un Gaziosmanpaşa ilçesinde doğdu. İ.Ü. Turizm ve Otel İşletme bölümünü
+            bitirdi. Basic, diksiyon, web tasarım ve fotoğrafçılık eğitimleri aldı.
+          </p>
+          <p>
+            1993 yılında kendi kurduğu "CTC Bilgisayar" firmasında Commodore, Amiga, Atari ve Sega markalarında yazılım
+            ve donanım hizmeti vermeye başladı. İlerleyen yıllarda cep telefonu, tablet, masa ve dizüstü bilgisayarları da
+            ürün ve hizmet ağına kattı. Ayrıca Türkiye'de ilk orijinal ve Kültür Bakanlığı bandrollü VCD üretim ve
+            dağıtımında büyük pay sahibi oldu. 1998'de G.O.Paşa, Beşiktaş ve Kadıköy'de iki mağaza ile toplamda dört
+            şubede hizmetine devam etti.
+          </p>
+          <p>
+            1999 yılında Bulgaristan Plovdiv şehrinde "CTC Studio" firmasını kurarak, reklam sektöründe pek çok
+            çalışmalar yaptı. 2002'de Sofia'da kurulan şirket ortaklığı ile Bulgaristan'ın ilk tabelacılık dergisi olan
+            "Sign Graphic Bulgaria"yı çıkarttı.
+          </p>
+          <p>
+            2 Nisan 2015 tarihinde reklam ve bilgisayar hizmetlerini tek çatı altında birleştirerek "CTC Bilişim ve Görsel
+            Tasarım" şirketini kurdu.
+          </p>
+        </div>
+
+        <h2 class="sub-title reveal">Kilometre taşları</h2>
+        <ol class="timeline">
+          {
+            timeline.map((t, i) => (
+              <li class="reveal" style={`--delay:${i * 50}ms`}>
+                <span class="year">{t.year}</span>
+                <p>{t.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section clients-section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow reveal">Referanslar</p>
+          <h2 class="h-section reveal">Müşteriler</h2>
+        </div>
+      </div>
+      <ul class="client-grid">
+        {clients.map((c, i) => <li class="reveal" style={`--delay:${(i % 4) * 40}ms`}>{c}</li>)}
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .bio-grid {
+    display: grid;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  @media (min-width: 960px) {
+    .bio-grid {
+      grid-template-columns: 4fr 7fr;
+      align-items: start;
+    }
+
+    .bio-aside {
+      position: sticky;
+      top: calc(var(--header-h) + 32px);
+    }
+  }
+
+  .bio-aside {
+    display: grid;
+    gap: 28px;
+  }
+
+  .bio-portrait img {
+    width: 100%;
+    max-width: 460px;
+    border-radius: var(--radius);
+    filter: grayscale(1);
+  }
+
+  .facts {
+    display: grid;
+    margin: 0;
+  }
+
+  .facts div {
+    display: grid;
+    gap: 2px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .facts dt {
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
+
+  .prose {
+    display: grid;
+    gap: 1.25em;
+    max-width: 68ch;
+    color: rgb(242 239 233 / 0.82);
+    font-size: 1.125rem;
+    line-height: 1.75;
+  }
+
+  .prose .first {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  .sub-title {
+    margin: clamp(56px, 7vw, 88px) 0 24px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .timeline li {
+    position: relative;
+    display: grid;
+    gap: 6px;
+    padding: 0 0 32px 32px;
+  }
+
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 8px;
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+
+  .timeline .year {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timeline p {
+    color: var(--muted);
+    max-width: 60ch;
+  }
+
+  .clients-section {
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
+
+  .client-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .client-grid li {
+    display: flex;
+    align-items: center;
+    min-height: 88px;
+    padding: 20px 24px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+
+  .client-grid li:hover {
+    background: var(--bg);
+    color: var(--accent);
+  }
+</style>

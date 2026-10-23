@@ -27,16 +27,20 @@ const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contact.map
               <span><span class="label">Adres</span>{contact.addressLines.map((l) => <span class="line">{l}</span>)}</span>
             </a>
           </li>
-          <li class="reveal" style="--delay:50ms">
-            <a href={contact.telHref} class="card">
-              <span class="ico"><Icon name="phone" size={22} /></span>
-              <span><span class="label">Telefon</span><span class="line">{contact.tel}</span></span>
-            </a>
-          </li>
+          {
+            contact.tel && contact.tel !== contact.gsm && (
+              <li class="reveal" style="--delay:50ms">
+                <a href={contact.telHref} class="card">
+                  <span class="ico"><Icon name="phone" size={22} /></span>
+                  <span><span class="label">Telefon</span><span class="line">{contact.tel}</span></span>
+                </a>
+              </li>
+            )
+          }
           <li class="reveal" style="--delay:100ms">
             <a href={contact.gsmHref} class="card">
-              <span class="ico"><Icon name="smartphone" size={22} /></span>
-              <span><span class="label">GSM</span><span class="line">{contact.gsm}</span></span>
+              <span class="ico"><Icon name={contact.tel === contact.gsm ? 'phone' : 'smartphone'} size={22} /></span>
+              <span><span class="label">{contact.tel === contact.gsm ? 'Telefon' : 'GSM'}</span><span class="line">{contact.gsm}</span></span>
             </a>
           </li>
           <li class="reveal" style="--delay:150ms">

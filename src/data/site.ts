@@ -35,11 +35,11 @@ export const socials = [
 export const contact = {
   addressLines: ['Merkez Mh. Halitpaşa Cd.', 'No: 27/A Gaziosmanpaşa', 'İstanbul - Türkiye'],
   mapsQuery: 'Merkez Mh. Halitpaşa Cd. No: 27/A Gaziosmanpaşa İstanbul',
-  tel: '+90 (212) 709 7700',
-  telHref: 'tel:+902127097700',
-  gsm: '+90 (552) 523 4317',
-  gsmHref: 'tel:+905525234317',
-  whatsappHref: 'https://wa.me/905525234317',
+  tel: '+90 (554) 879 11 55',
+  telHref: 'tel:+905548791155',
+  gsm: '+90 (554) 879 11 55',
+  gsmHref: 'tel:+905548791155',
+  whatsappHref: 'https://wa.me/905548791155',
   email: 'ugur@ctcstudio.com.tr',
 };
 

@@ -26,7 +26,7 @@ export const nav = [
 ];
 
 export const socials = [
-  { href: 'https://www.instagram.com/ugurdrmz/', label: 'Instagram', icon: 'instagram' },
+  { href: 'https://www.instagram.com/ugurdrmz/', label: '@ugurdrmz', icon: 'instagram' },
   { href: 'https://www.facebook.com/ugurdurmaz75', label: 'Facebook', icon: 'facebook' },
   { href: 'https://twitter.com/ugur_drmz', label: 'Twitter', icon: 'twitter' },
   { href: 'https://www.linkedin.com/in/ugur-durmaz-75508a69/', label: 'LinkedIn', icon: 'linkedin' },
@@ -41,6 +41,8 @@ export const contact = {
   gsmHref: 'tel:+905525234317',
   whatsappHref: 'https://wa.me/905525234317',
   email: 'ugurdurmaz@gmail.com',
+  instagram: 'https://www.instagram.com/ugurdrmz/',
+  instagramHandle: '@ugurdrmz',
 };
 
 export type Category = 'Doğa' | 'Şehir' | 'İnsan';

@@ -55,6 +55,12 @@ const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(contact.map
               <span><span class="label">E-posta</span><span class="line">{contact.email}</span></span>
             </a>
           </li>
+          <li class="reveal" style="--delay:250ms">
+            <a href={contact.instagram} target="_blank" rel="noopener noreferrer" class="card">
+              <span class="ico"><Icon name="instagram" size={22} /></span>
+              <span><span class="label">Instagram</span><span class="line">{contact.instagramHandle}</span></span>
+            </a>
+          </li>
         </ul>
         <ul class="socials-row">
           {

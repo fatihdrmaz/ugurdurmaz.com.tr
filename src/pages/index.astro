@@ -5,7 +5,7 @@ import Icon from '../components/Icon.astro';
 import { photos, works, services, clients } from '../data/site';
 import portrait from '../assets/dur.png';
 
-const heroTitles = ['Sultanahmet', 'Yelken', 'Cezalı Kuşlar', 'Sessiz Göl'];
+const heroTitles = ['Yelken', 'Sultanahmet', 'Cezalı Kuşlar', 'Sessiz Göl'];
 const heroPhotos = heroTitles.map((t) => photos.find((p) => p.title === t)!);
 const heroImages = await Promise.all(
   heroPhotos.map((p) => getImage({ src: p.src, width: 1920, format: 'webp', quality: 75 })),
